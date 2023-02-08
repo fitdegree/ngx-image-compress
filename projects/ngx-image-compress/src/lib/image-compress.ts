@@ -11,7 +11,7 @@ export class ImageCompress {
         let reader = new FileReader();
         console.log("CUSTOM CODE");
         if (file instanceof Blob) {
-            let realFileReader = reader._realReader;
+            let realFileReader = (reader as any)._realReader;
             console.log("It's a blob using realReader");
             if (realFileReader) {
                 reader = realFileReader;
@@ -105,7 +105,7 @@ export class ImageCompress {
         let reader = new FileReader();
         console.log("CUSTOM CODE");
         if (file instanceof Blob) {
-            let realFileReader = reader._realReader;
+            let realFileReader = (reader as any)._realReader;
             console.log("It's a blob using realReader");
             if (realFileReader) {
                 reader = realFileReader;
