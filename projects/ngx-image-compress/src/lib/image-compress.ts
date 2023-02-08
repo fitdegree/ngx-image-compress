@@ -7,7 +7,17 @@ export class ImageCompress {
     static getOrientation = (file: File): Promise<DOC_ORIENTATION> =>
         new Promise<DOC_ORIENTATION>((resolve, reject) => {
             try {
-                const reader = new FileReader();
+
+        let reader = new FileReader();
+        console.log("CUSTOM CODE");
+        if (file instanceof Blob) {
+            let realFileReader = reader._realReader;
+            console.log("It's a blob using realReader");
+            if (realFileReader) {
+                reader = realFileReader;
+            }
+        }
+
                 reader.onload = () => {
                     const view = new DataView(reader.result as ArrayBuffer);
                     if (!view.byteLength) {
@@ -91,7 +101,17 @@ export class ImageCompress {
 
     static fileToDataURL = (file: File): Promise<{dataUrl: string; fileName: string}> => {
         return new Promise<{dataUrl: string; fileName: string}>((resolve, reject) => {
-            const reader = new FileReader();
+
+        let reader = new FileReader();
+        console.log("CUSTOM CODE");
+        if (file instanceof Blob) {
+            let realFileReader = reader._realReader;
+            console.log("It's a blob using realReader");
+            if (realFileReader) {
+                reader = realFileReader;
+            }
+        }
+
             reader.onload = (e: any) => {
                 //myReader.onloadend = (progressEvent: ProgressEvent<FileReader>)
                 resolve({dataUrl: e.target.result, fileName: file.name});
