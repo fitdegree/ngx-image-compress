@@ -62,8 +62,12 @@ export class ImageCompress {
         
         new Promise(function (resolve, reject) {
             console.log("uploadFile (image-compress.ts)");
-            const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+            let isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+           
             console.log("isSafari: ", isSafari);
+            console.log("navigator.userAgent: ", navigator.userAgent);
+            console.log("Changing isSafari to true!");
+            isSafari = true;
             Promise.resolve(isSafari)
                 .then(onlyNative => {
                     console.log("onlyNative:", onlyNative);
@@ -168,7 +172,7 @@ export class ImageCompress {
                     {once: true}
                 );
             }
-            console.log("Input element is all created:", inputElement)
+            //Console logging this inputElement fixes the bug
             inputElement.click();
         });
     };
