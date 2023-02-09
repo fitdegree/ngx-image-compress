@@ -135,7 +135,9 @@ export class ImageCompress {
 
     static generateUploadInputRenderer = (render: Renderer2, multiple: boolean = true, rejectOnCancel = false) => {
         let lock = false;
+        console.log("generateUploadInputrenderer");
         return new Promise<FileList | null>((resolve, reject) => {
+            console.log("1");
             const inputElement = render.createElement('input');
             render.setStyle(inputElement, 'display', 'none');
             render.setProperty(inputElement, 'type', 'file');
@@ -146,6 +148,7 @@ export class ImageCompress {
             }
 
             render.listen(inputElement, 'click', ($event: MouseEvent) => {
+                console.log("CLICK EVENT!!!!");
                 ($event.target as any as HTMLInputElement).value = '';
             });
 
@@ -161,6 +164,7 @@ export class ImageCompress {
                     () => {
                         setTimeout(() => {
                             if (!lock) {
+                                console.log("NOT LOCK!?");
                                 reject(new Error('file upload on blur - no file selected'));
                             }
                         }, 300);
@@ -168,8 +172,9 @@ export class ImageCompress {
                     {once: true}
                 );
             }
-
+            console.log("Input element is all created:", inputElement)
             inputElement.click();
+            console.log("I Just clicked the new input! LOL :)");
         });
     };
 
