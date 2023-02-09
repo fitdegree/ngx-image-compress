@@ -44,6 +44,7 @@ export class NgxImageCompressService {
      * Nothing happen if no files have been selected
      */
     public uploadMultipleFiles(): Promise<UploadResponse[]> {
+        console.log("uploadMultipleFiles()");
         return ImageCompress.uploadFile(this.render, true) as Promise<UploadResponse[]>;
     }
 

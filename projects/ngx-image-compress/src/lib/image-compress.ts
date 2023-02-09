@@ -59,30 +59,38 @@ export class ImageCompress {
         });
 
     static uploadFile = (render: Renderer2, multiple: boolean = true, rejectOnCancel = false): Promise<UploadResponse | UploadResponse[]> =>
+        
         new Promise(function (resolve, reject) {
+            console.log("uploadFile (image-compress.ts)");
             const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-
+            console.log("isSafari: ", isSafari);
             Promise.resolve(isSafari)
                 .then(onlyNative => {
+                    console.log("onlyNative:", onlyNative);
                     if (onlyNative) {
+                        console.log("Yes onlyNative");
                         return ImageCompress.generateUploadInputNative(window.document, multiple, rejectOnCancel);
                     } else {
+                        console.log("NO onlyNative");
                         return ImageCompress.generateUploadInputRenderer(render, multiple, rejectOnCancel);
                     }
                 })
                 .then((filesList: FileList | null) => {
+                    console.log("after generateUploadInput")
                     const files = filesList ? Array.from(filesList) : [];
                     const orientationPromises = files.map(file => ImageCompress.getOrientation(file));
                     const readerPromises = files.map(file => ImageCompress.fileToDataURL(file));
 
                     let orientationsResult: DOC_ORIENTATION[] = [];
-
+                    console.log("awaiting all promises");
                     Promise.all(orientationPromises)
                         .then((orientations: DOC_ORIENTATION[]) => {
+                            console.log("all promises completed");
                             orientationsResult = orientations;
                             return Promise.all(readerPromises);
                         })
                         .then(readerResult => {
+                            console.log("readerResult", readerResult);
                             const resultArray = readerResult.map((parsedFile, index) => ({
                                 image: parsedFile.dataUrl,
                                 orientation: orientationsResult[index],
@@ -90,6 +98,7 @@ export class ImageCompress {
                             }));
 
                             if (multiple) {
+                                console.log("resolve multiple", resultArray);
                                 resolve(resultArray);
                             } else {
                                 resolve(resultArray[0]);
@@ -166,7 +175,9 @@ export class ImageCompress {
 
     static generateUploadInputNative = (documentNativeApi: any, multiple: boolean = true, rejectOnCancel = false) => {
         let lock = false;
+        console.log("generateUploadInputNative");
         return new Promise<FileList | null>((resolve, reject) => {
+            console.log("Creating input element");
             const inputElement = documentNativeApi.createElement('input');
             inputElement.id = 'upload-input' + new Date();
             inputElement.style.display = 'none';
@@ -179,9 +190,11 @@ export class ImageCompress {
 
             documentNativeApi.body.appendChild(inputElement);
 
+            console.log("Appending input element");
             inputElement.addEventListener(
                 'change',
                 () => {
+                    console.log("Input changed");
                     lock = true;
                     resolve(inputElement.files);
                     documentNativeApi.body.removeChild(documentNativeApi.getElementById(inputElement.id) as Node);
