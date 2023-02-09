@@ -61,6 +61,8 @@ jobs:
       - name: "Ship the LICENSE"
         run: cp ./LICENSE ./dist/ngx-image-compress/LICENSE
 
+      - run: echo "${{secrets.NPM_TOKEN}}"
+
       - name: "Publish the library on npm"
         working-directory: ./dist/ngx-image-compress
         env:
